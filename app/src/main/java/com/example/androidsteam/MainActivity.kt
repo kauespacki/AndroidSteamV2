@@ -51,6 +51,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 
 class MainActivity : ComponentActivity() {
@@ -59,21 +60,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidSteamTheme {
-                TelaLogin()
+                AppNavigation()
             }
         }
     }
 }
 
-
-
-
-
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Preview(showBackground = true)
 @Composable
-fun TelaLogin(){
+fun TelaLogin(navController: NavHostController){
     var usuario by remember {
         mutableStateOf("")
     }
@@ -126,13 +121,8 @@ fun TelaLogin(){
                     )
                 }
                 Row(modifier = Modifier.height(70.dp)) {
-                    val context = LocalContext.current
                     Button(
                         onClick = {
-                            val intent = Intent(
-                                context, TelaInicial::class.java
-                            )
-                            context.startActivity(intent)
                         },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RectangleShape,

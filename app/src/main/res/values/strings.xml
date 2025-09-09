@@ -2,4 +2,6 @@
     <string name="app_name">AndroidSteam</string>
     <string name="title_activity_tela_perfil">TelaPerfil</string>
     <string name="title_activity_tela_inicial">TelaInicial</string>
+    <string name="title_activity_tela_detalhes_conta">TelaDetalhesConta</string>
+    <string name="title_activity_navigation">Navigation</string>
 </resources>
