@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AndroidSteam</string>
+    <string name="title_activity_tela_perfil">TelaPerfil</string>
+    <string name="title_activity_tela_inicial">TelaInicial</string>
+</resources>
