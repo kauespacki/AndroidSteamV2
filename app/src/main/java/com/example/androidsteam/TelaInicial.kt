@@ -66,18 +66,25 @@ fun PreviewTela3(){
 
 @Composable
 fun Tela3(onClickPerfil: () -> Unit){
-    Scaffold {
-        LazyColumn (
+    Scaffold(
+        modifier = Modifier.fillMaxSize()
+    ) { paddingValues ->
+        Column(
             modifier = Modifier
-                .padding(it)
-                .background(Color(0xFF1d405c)
-            )
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
-            item {Cabecalho()}
-            item {Bloco1()}
-            item {Bloco2()}
-            item {Bloco3()}
-            item{Footer(onClickPerfil)}
+            Cabecalho()
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .background(Color(0xFF1d405c))
+            ) {
+                item { Bloco1() }
+                item { Bloco2() }
+                item { Bloco3() }
+            }
+            Footer(onClickPerfil)
         }
     }
 }
@@ -111,7 +118,7 @@ private fun Cabecalho() {
                     label = {
                         Text("STEAM", color = Color.LightGray)
                     },
-                    modifier = Modifier.height(20.dp).fillMaxWidth(0.85f),
+                    modifier = Modifier.height(30.dp).fillMaxWidth(0.85f),
                     onValueChange = {},
                     colors = TextFieldDefaults.colors(unfocusedContainerColor = Color(0xFF292c33))
                 )
@@ -201,7 +208,7 @@ private fun Bloco3() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(280.dp)
+            .height(300.dp)
             .background(Color(0xFF1d405c))
     ) {
         Column {
