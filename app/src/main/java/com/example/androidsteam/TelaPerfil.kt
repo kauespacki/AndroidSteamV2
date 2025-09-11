@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 
 class TelaPerfil : ComponentActivity() {
@@ -44,16 +45,14 @@ class TelaPerfil : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidSteamTheme {
-                Tela2()
             }
         }
     }
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Preview(showBackground = true)
 @Composable
-fun Tela2(){
+fun Tela2(onClickInicio: () -> Unit){
     Scaffold {
         Surface(modifier = Modifier.padding(it)) {
             Column(
@@ -220,15 +219,11 @@ fun Tela2(){
                     horizontalArrangement = Arrangement.SpaceEvenly
 
                 ) {
-                    val context = LocalContext.current
                     Icon(imageVector = Icons.Default.Home,
                         contentDescription = "",
                         modifier = Modifier.size(35.dp)
                             .clickable {
-                                val intent = Intent(
-                                    context, TelaInicial::class.java
-                                )
-                                context.startActivity(intent)
+                                onClickInicio()
                             },
                         tint = Color.White
 

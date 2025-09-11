@@ -8,12 +8,10 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "telaInicial"){
-
-        composable("telaLogin") { TelaLogin(navController) }
-        composable("telaInicial") { Tela3() }
-        composable("telaPerfil") {  }
-        composable("telaDetalhesPerfil") {  }
-
+    NavHost(navController = navController, startDestination = "telaLogin"){
+        composable("telaLogin") { Tela1(navController) }
+        composable("telaInicial") { Tela3(navController) }
+        composable("telaPerfil") { Tela2{navController.navigate("telaInicial")} }
+        composable("telaDetalhesPerfil") { Tela4() }
     }
 }

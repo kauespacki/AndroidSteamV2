@@ -2,25 +2,13 @@ package com.example.androidsteam
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.compose.AsyncImage
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Paint.Style
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,8 +20,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
@@ -45,14 +33,12 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -61,9 +47,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 
 class TelaInicial : ComponentActivity() {
@@ -72,31 +57,25 @@ class TelaInicial : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidSteamTheme {
-                Tela3()
             }
         }
     }
 }
 
-@Preview
 @Composable
-fun Tela3(){
-
+fun Tela3(navController: NavHostController){
     Scaffold {
-
-
         LazyColumn (
-
             modifier = Modifier
                 .padding(it)
                 .background(Color(0xFF1d405c)
             )
         ) {
             item {Cabecalho()}
-            item {  Bloco1()}
-            item { Bloco2()}
+            item {Bloco1()}
+            item {Bloco2()}
             item {Bloco3()}
-            item {Footer()}
+            item {Footer(navController)}
         }
     }
 }
@@ -212,7 +191,7 @@ private fun Bloco1() {
 }
 
 @Composable
-private fun Footer() {
+private fun Footer(navController: NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -250,16 +229,12 @@ private fun Footer() {
             tint = Color.White
 
         )
-        val context = LocalContext.current
         Icon(imageVector = Icons.Default.Menu,
             contentDescription = "",
             modifier = Modifier.size(35.dp)
                 .clickable {
+                    navController.navigate("telaPerfil")
 
-                    val intent = Intent(
-                        context, TelaPerfil::class.java
-                    )
-                    context.startActivity(intent)
                 },
             tint = Color.White
 

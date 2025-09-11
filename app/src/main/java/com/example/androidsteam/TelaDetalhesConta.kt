@@ -19,8 +19,12 @@ class TelaDetalhesConta : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidSteamTheme {
-
             }
         }
     }
+}
+
+@Composable
+fun Tela4(){
+
 }
