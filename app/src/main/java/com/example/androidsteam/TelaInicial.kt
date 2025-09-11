@@ -77,7 +77,7 @@ fun Tela3(onClickPerfil: () -> Unit){
             item {Bloco1()}
             item {Bloco2()}
             item {Bloco3()}
-            item {Footer(onClickPerfil)}
+            item{Footer(onClickPerfil)}
         }
     }
 }
@@ -131,7 +131,7 @@ private fun Cabecalho() {
             Row (
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize().padding(5.dp)
             ) {
                 Text("MENU", color = Color.LightGray)
                 Text("LISTA DESEJOS", color = Color.LightGray)
@@ -146,7 +146,7 @@ private fun Bloco1() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(320.dp)
+            .height(322.dp)
     ) {
         Column {
 
@@ -241,13 +241,12 @@ private fun Footer(onClickPerfil: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(55.dp)
+            .height(50.dp)
             .background(Color(0xFF202126)),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
 
     ) {
-
         Icon(imageVector = Icons.Default.Home,
             contentDescription = "",
             modifier = Modifier.size(35.dp),

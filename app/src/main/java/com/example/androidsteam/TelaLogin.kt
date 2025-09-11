@@ -62,80 +62,104 @@ fun Tela1(onClickInicio: () -> Unit){
     }
     Scaffold {
         Surface(modifier = Modifier.padding(it)) {
-
             Column(
                 modifier = Modifier
                     .background(color = Color(0xFF292c33))
                     .fillMaxSize()
                     .padding(10.dp)
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth().padding(top = 20.dp, bottom = 20.dp)
-                ) {
-                    Text("INICIAR SESSÃO", color = Color.White, style = MaterialTheme.typography.titleLarge)
-                }
-                Row(modifier = Modifier.height(30.dp)) {
-                    Text("NOME DE USUÁRIO STEAM", color = Color.LightGray)
-                }
-                Row(modifier = Modifier.height(80.dp)) {
-                    TextField(
-                        value = usuario,
-                        onValueChange = {usuario = it},
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color(0xFF202126),
-                            unfocusedContainerColor = Color(0xFF202126),
-                            disabledContainerColor = Color(0xFF202126)
-                        )
-                    )
-                }
-                Row(modifier = Modifier.height(30.dp)) {
-                    Text("SENHA", color = Color.LightGray)
-                }
-                Row(modifier = Modifier.height(80.dp)) {
-                    TextField(
-                        value = senha,
-                        onValueChange = {senha = it},
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color(0xFF202126),
-                            unfocusedContainerColor = Color(0xFF202126),
-                            disabledContainerColor = Color(0xFF202126)
-                        )
-                    )
-                }
-                Row(modifier = Modifier.height(70.dp)) {
-                    Button(
-                        onClick = {
-                            onClickInicio()
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RectangleShape,
-                        colors = ButtonColors(
-                            containerColor = Color(0xFF216cad),
-                            contentColor = Color.White,
-                            disabledContainerColor = Color.White,
-                            disabledContentColor = Color.White
-                        ),
-
-                        ) {
-                        Text("Iniciar sessão")
-                    }
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth().height(30.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text("Preciso de ajuda para iniciar a sessão", color = Color.LightGray)
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text("Não tem uma conta Steam?", color = Color.White)
-                }
+                Cabecalho()
+                Formulario(usuario, senha, onClickInicio)
+                InformacoesAdicionais()
             }
         }
+    }
+}
+
+@Composable
+private fun Cabecalho() {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 20.dp, bottom = 20.dp)
+    ) {
+        Text("INICIAR SESSÃO", color = Color.White, style = MaterialTheme.typography.titleLarge)
+    }
+}
+
+@Composable
+private fun Formulario(
+    usuario: String,
+    senha: String,
+    onClickInicio: () -> Unit
+) {
+    var usuario1 = usuario
+    var senha1 = senha
+    Row(modifier = Modifier.height(30.dp)) {
+        Text("NOME DE USUÁRIO STEAM", color = Color.LightGray)
+    }
+    Row(modifier = Modifier.height(80.dp)) {
+        TextField(
+            value = usuario1,
+            onValueChange = { usuario1 = it },
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color(0xFF202126),
+                unfocusedContainerColor = Color(0xFF202126),
+                disabledContainerColor = Color(0xFF202126)
+            )
+        )
+    }
+    Row(modifier = Modifier.height(30.dp)) {
+        Text("SENHA", color = Color.LightGray)
+    }
+    Row(modifier = Modifier.height(80.dp)) {
+        TextField(
+            value = senha1,
+            onValueChange = { senha1 = it },
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color(0xFF202126),
+                unfocusedContainerColor = Color(0xFF202126),
+                disabledContainerColor = Color(0xFF202126)
+            )
+        )
+    }
+    Row(modifier = Modifier.height(70.dp)) {
+        Button(
+            onClick = {
+                onClickInicio()
+            },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RectangleShape,
+            colors = ButtonColors(
+                containerColor = Color(0xFF216cad),
+                contentColor = Color.White,
+                disabledContainerColor = Color.White,
+                disabledContentColor = Color.White
+            ),
+
+            ) {
+            Text("Iniciar sessão")
+        }
+    }
+}
+
+@Composable
+private fun InformacoesAdicionais() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(30.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text("Preciso de ajuda para iniciar a sessão", color = Color.LightGray)
+    }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text("Não tem uma conta Steam?", color = Color.White)
     }
 }
