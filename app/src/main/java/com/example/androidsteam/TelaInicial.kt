@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,7 +20,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
@@ -46,9 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 
 class TelaInicial : ComponentActivity() {
@@ -63,7 +59,13 @@ class TelaInicial : ComponentActivity() {
 }
 
 @Composable
-fun Tela3(navController: NavHostController){
+@Preview
+fun PreviewTela3(){
+    Tela3 {}
+}
+
+@Composable
+fun Tela3(onClickPerfil: () -> Unit){
     Scaffold {
         LazyColumn (
             modifier = Modifier
@@ -75,19 +77,123 @@ fun Tela3(navController: NavHostController){
             item {Bloco1()}
             item {Bloco2()}
             item {Bloco3()}
-            item {Footer(navController)}
+            item {Footer(onClickPerfil)}
         }
     }
 }
 
 @Composable
-private fun banner1() {
-    Image(
-        painter = painterResource(id = R.drawable.banner1),
-        contentDescription = "imagem local",
-        contentScale = ContentScale.Crop,
-        modifier = Modifier.fillMaxSize()
-    )
+private fun Cabecalho() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(60.dp)
+            .background(Color(0xFF202126))
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Row {
+                TextField(
+                    value = "Busca",
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
+                            tint = Color.LightGray,
+                            contentDescription = ""
+                        )},
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            tint = Color.LightGray,
+                            contentDescription = ""
+                        )},
+                    label = {
+                        Text("STEAM", color = Color.LightGray)
+                    },
+                    modifier = Modifier.height(20.dp).fillMaxWidth(0.85f),
+                    onValueChange = {},
+                    colors = TextFieldDefaults.colors(unfocusedContainerColor = Color(0xFF292c33))
+                )
+                Spacer(Modifier.weight(1f))
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    tint = Color.LightGray,
+                    contentDescription = ""
+                )
+                Icon(
+                    imageVector = Icons.Default.AccountBox,
+                    tint = Color.LightGray,
+                    contentDescription = ""
+                )
+            }
+
+            Row (
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Text("MENU", color = Color.LightGray)
+                Text("LISTA DESEJOS", color = Color.LightGray)
+                Text("CARTEIRA (R$ 0,00)", color = Color.LightGray)
+            }
+        }
+    }
+}
+
+@Composable
+private fun Bloco1() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(320.dp)
+    ) {
+        Column {
+
+            Text("DESTAQUES E RECOMENDADOS", color = Color.White, modifier = Modifier.padding(0.dp,30.dp,0.dp,0.dp))
+
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFF0A1821),
+                ),
+                shape = RectangleShape,
+                modifier = Modifier.padding(4.dp)
+
+            ) {
+                Box(modifier = Modifier.height(190.dp).fillMaxWidth()
+                    .background(Color.Red)
+                ){
+                    Image(
+                        painter = painterResource(id = R.drawable.banner1),
+                        contentDescription = "imagem local",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+                Text("The Last of Us Part I", style = MaterialTheme.typography.titleMedium, color = Color.White)
+                Text("-50% R$124,95", style = MaterialTheme.typography.titleSmall, color = Color(0XFFbce549))
+            }
+
+        }
+    }
+}
+
+@Composable
+private fun Bloco2() {
+    Row(
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth()
+            .height(130.dp)
+            .background(Color.Cyan)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.banner2),
+            contentDescription = "imagem local",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
+    }
 }
 
 @Composable
@@ -113,7 +219,12 @@ private fun Bloco3() {
                 Box(modifier = Modifier.height(160.dp).fillMaxWidth()
                     .background(Color.Red)
                 ){
-                    banner3()
+                    Image(
+                        painter = painterResource(id = R.drawable.banner3),
+                        contentDescription = "imagem local",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
                 Text("OFERTA DO MEIO DA SEMANA", style = MaterialTheme.typography.titleMedium, color = Color.White)
                 Text("Oferta válida até 3 de set. às 14:00", color = Color.LightGray)
@@ -126,72 +237,7 @@ private fun Bloco3() {
 }
 
 @Composable
-private fun banner3() {
-    Image(
-        painter = painterResource(id = R.drawable.banner3),
-        contentDescription = "imagem local",
-        contentScale = ContentScale.Crop,
-        modifier = Modifier.fillMaxSize()
-    )
-}
-
-@Composable
-private fun Bloco2() {
-    Row(
-        modifier = Modifier
-            .padding(4.dp)
-            .fillMaxWidth()
-            .height(130.dp)
-            .background(Color.Cyan)
-    ) {
-        banner2()
-    }
-}
-
-@Composable
-private fun banner2() {
-    Image(
-        painter = painterResource(id = R.drawable.banner2),
-        contentDescription = "imagem local",
-        contentScale = ContentScale.Crop,
-        modifier = Modifier.fillMaxSize()
-    )
-}
-
-@Composable
-private fun Bloco1() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(320.dp)
-    ) {
-        Column {
-
-            Text("DESTAQUES E RECOMENDADOS", color = Color.White, modifier = Modifier.padding(0.dp,30.dp,0.dp,0.dp))
-
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFF0A1821),
-                ),
-                shape = RectangleShape,
-                modifier = Modifier.padding(4.dp)
-
-            ) {
-                Box(modifier = Modifier.height(190.dp).fillMaxWidth()
-                    .background(Color.Red)
-                ){
-                    banner1()
-                }
-                Text("The Last of Us Part I", style = MaterialTheme.typography.titleMedium, color = Color.White)
-                Text("-50% R$124,95", style = MaterialTheme.typography.titleSmall, color = Color(0XFFbce549))
-            }
-
-        }
-    }
-}
-
-@Composable
-private fun Footer(navController: NavHostController) {
+private fun Footer(onClickPerfil: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -233,71 +279,12 @@ private fun Footer(navController: NavHostController) {
             contentDescription = "",
             modifier = Modifier.size(35.dp)
                 .clickable {
-                    navController.navigate("telaPerfil")
+                    onClickPerfil()
 
                 },
             tint = Color.White
 
         )
 
-    }
-}
-
-@Composable
-private fun Cabecalho() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(60.dp)
-            .background(Color(0xFF202126))
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Row {
-                TextField(
-                    value = "Busca",
-                    leadingIcon = {
-                        Icon(
-                        imageVector = Icons.Default.AccountCircle,
-                        tint = Color.LightGray,
-                        contentDescription = ""
-                    )},
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            tint = Color.LightGray,
-                            contentDescription = ""
-                        )},
-                    label = {
-                        Text("STEAM", color = Color.LightGray)
-                    },
-                    modifier = Modifier.height(20.dp).fillMaxWidth(0.85f),
-                    onValueChange = {},
-                    colors = TextFieldDefaults.colors(unfocusedContainerColor = Color(0xFF292c33))
-                )
-                Spacer(Modifier.weight(1f))
-                Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    tint = Color.LightGray,
-                    contentDescription = ""
-                )
-                Icon(
-                    imageVector = Icons.Default.AccountBox,
-                    tint = Color.LightGray,
-                    contentDescription = ""
-                )
-            }
-
-            Row (
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Text("MENU", color = Color.LightGray)
-                Text("LISTA DESEJOS", color = Color.LightGray)
-                Text("CARTEIRA (R$ 0,00)", color = Color.LightGray)
-            }
-        }
     }
 }

@@ -29,8 +29,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 
 class TelaLogin : ComponentActivity() {
@@ -45,9 +45,15 @@ class TelaLogin : ComponentActivity() {
     }
 }
 
+@Composable
+@Preview
+fun PreviewTela1(){
+    Tela1 {}
+}
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Tela1(navController: NavHostController){
+fun Tela1(onClickInicio: () -> Unit){
     var usuario by remember {
         mutableStateOf("")
     }
@@ -102,7 +108,7 @@ fun Tela1(navController: NavHostController){
                 Row(modifier = Modifier.height(70.dp)) {
                     Button(
                         onClick = {
-                            navController.navigate("telaInicial")
+                            onClickInicio()
                         },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RectangleShape,

@@ -1,7 +1,5 @@
 package com.example.androidsteam
 
-import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,10 +31,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 
 class TelaPerfil : ComponentActivity() {
@@ -50,7 +46,12 @@ class TelaPerfil : ComponentActivity() {
     }
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+@Preview
+fun PreviewTela2(){
+    Tela2 {}
+}
+
 @Composable
 fun Tela2(onClickInicio: () -> Unit){
     Scaffold {
