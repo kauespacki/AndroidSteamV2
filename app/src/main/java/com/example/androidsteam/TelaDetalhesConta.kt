@@ -75,6 +75,7 @@ fun Tela4(onClickInicio: () -> Unit){
 
             LazyColumn (
                 modifier = Modifier
+                    .weight(1f)
                     .background(Color(0xFF1c293a))
             ) {
                 item {Parte1()}
@@ -204,7 +205,7 @@ fun Parte3() {
             ) {
                 Text("Saldo da Carteira", color = Color(0xFF7bc1e7))
                 Text(
-                    "R$ 10,54",
+                    "R$ 0,00",
                     style = MaterialTheme.typography.headlineLarge,
                     color = Color(0xFF7bc1e7)
                 )
@@ -334,6 +335,38 @@ fun Parte3() {
                 Text("Telefone: ", color = Color.Gray, style = TextStyle(fontSize = 12.sp))
                 Text("📱 terminado em 00", color = Color.White, style = TextStyle(fontSize = 12.sp))
             }
+
+
+        }
+
+    }
+
+
+    Column(
+        modifier = Modifier
+            .padding(9.dp)
+            .background(Color(0xFF16202c))
+    ) {
+        Column(modifier = Modifier.padding(10.dp).fillMaxWidth()) {
+
+            Row{
+                Text(
+                    "Excluir minha conta da Steam",
+                    color = Color.White,
+                    modifier = Modifier.background(Color(0xFF26303c)).padding(4.dp)
+                )
+
+                Spacer(modifier = Modifier.padding(5.dp))
+
+                Text(
+                    "- Saiba mais sobre a exclusão permanente  da sua conta e dados associados.",
+                    color = Color.Gray,
+                    style = TextStyle(fontSize = 12.sp),
+                    modifier = Modifier.weight(1f),
+                )
+            }
+
+
         }
     }
 }
