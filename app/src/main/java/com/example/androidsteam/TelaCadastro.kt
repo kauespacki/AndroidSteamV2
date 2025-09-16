@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -57,7 +58,7 @@ fun PreviewTela5(){
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Tela5(onClickInicio: () -> Unit){
+fun Tela5(onClickInicio: () -> Unit, onClickLogin: () -> Unit){
     Scaffold {
         Surface(modifier = Modifier.padding(it)) {
             Column(
@@ -68,7 +69,7 @@ fun Tela5(onClickInicio: () -> Unit){
             ) {
                 Cabecalho2()
                 Formulario2(onClickInicio)
-                InformacoesAdicionais2()
+                InformacoesAdicionais2(onClickLogin)
             }
         }
     }
@@ -175,7 +176,7 @@ private fun Formulario2(
 }
 
 @Composable
-private fun InformacoesAdicionais2() {
+private fun InformacoesAdicionais2(onClickLogin: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -188,6 +189,10 @@ private fun InformacoesAdicionais2() {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        Text("Já possui uma conta Steam?", color = Color.White)
+        Text("Já possui uma conta Steam?",
+            modifier = Modifier.clickable {
+                onClickLogin()
+            },
+            color = Color.White)
     }
 }
