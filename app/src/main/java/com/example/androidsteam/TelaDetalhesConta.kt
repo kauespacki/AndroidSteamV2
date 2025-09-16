@@ -62,6 +62,11 @@ class TelaDetalhesConta : ComponentActivity() {
     }
 }
 
+@Composable
+@Preview
+fun PreviewTela4(){
+    Tela4(onClickInicio = {})
+}
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
