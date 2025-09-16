@@ -53,7 +53,7 @@ class TelaCadastro : ComponentActivity() {
 @Composable
 @Preview
 fun PreviewTela5(){
-    Tela5 {}
+    Tela5(onClickInicio = {}, onClickLogin = {})
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
