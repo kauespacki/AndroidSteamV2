@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,8 +37,7 @@ import androidx.compose.ui.unit.dp
 import com.example.androidsteam.Globals.usuarios
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 
-
-class TelaLogin : ComponentActivity() {
+class TelaCadastro : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -53,13 +51,13 @@ class TelaLogin : ComponentActivity() {
 
 @Composable
 @Preview
-fun PreviewTela1(){
-    Tela1(onClickInicio = {}, onClickCadastro = {})
+fun PreviewTela5(){
+    Tela5 {}
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Tela1(onClickInicio: () -> Unit, onClickCadastro: () -> Unit){
+fun Tela5(onClickInicio: () -> Unit){
     Scaffold {
         Surface(modifier = Modifier.padding(it)) {
             Column(
@@ -68,40 +66,37 @@ fun Tela1(onClickInicio: () -> Unit, onClickCadastro: () -> Unit){
                     .fillMaxSize()
                     .padding(10.dp)
             ) {
-                Cabecalho()
-                Formulario(onClickInicio)
-                InformacoesAdicionais(onClickCadastro)
+                Cabecalho2()
+                Formulario2(onClickInicio)
+                InformacoesAdicionais2()
             }
         }
     }
 }
 
 @Composable
-private fun Cabecalho() {
+private fun Cabecalho2() {
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 20.dp, bottom = 20.dp)
     ) {
-        Text("INICIAR SESSÃO", color = Color.White, style = MaterialTheme.typography.titleLarge)
+        Text("CADASTRAR", color = Color.White, style = MaterialTheme.typography.titleLarge)
     }
 }
 
 @Composable
-private fun Formulario(
+private fun Formulario2(
     onClickInicio: () -> Unit
 ) {
-    usuarios.add(Usuario(
-        1, "admin", "admin"
-        )
-    )
     var usuario1 by remember {
         mutableStateOf("")
     }
     var senha1 by remember {
         mutableStateOf("")
     }
+    val context = LocalContext.current
     Row(modifier = Modifier.height(30.dp)) {
         Text("NOME DE USUÁRIO STEAM", color = Color.LightGray)
     }
@@ -119,8 +114,25 @@ private fun Formulario(
             )
         )
     }
-    val context = LocalContext.current
-    var c = 0
+
+    Row(modifier = Modifier.height(30.dp)) {
+        Text("SENHA", color = Color.LightGray)
+    }
+    Row(modifier = Modifier.height(80.dp)) {
+        TextField(
+            value = senha1,
+            onValueChange = { senha1 = it },
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color(0xFF202126),
+                unfocusedContainerColor = Color(0xFF202126),
+                disabledContainerColor = Color(0xFF202126),
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White
+            ),
+            visualTransformation = PasswordVisualTransformation()
+        )
+    }
     Row(modifier = Modifier.height(30.dp)) {
         Text("SENHA", color = Color.LightGray)
     }
@@ -142,17 +154,10 @@ private fun Formulario(
     Row(modifier = Modifier.height(70.dp)) {
         Button(
             onClick = {
-                usuarios.forEach {
-                    if(it.nome == usuario1){
-                        if(it.senha == senha1){
-                            onClickInicio()
-                            c++
-                        }
-                    }
-                }
-                if(c == 0){
-                    Toast.makeText(context, "Usuário não encontrado.", Toast.LENGTH_SHORT).show()
-                }
+                usuarios.add(
+                    Usuario(1, usuario1, senha1)
+                )
+                Toast.makeText(context, "Cadastro efetuado.", Toast.LENGTH_SHORT).show()
             },
             modifier = Modifier.fillMaxWidth(),
             shape = RectangleShape,
@@ -164,30 +169,25 @@ private fun Formulario(
             ),
 
             ) {
-            Text("Iniciar sessão")
+            Text("Fazer cadastro")
         }
     }
 }
 
 @Composable
-private fun InformacoesAdicionais(onClickCadastro: () -> Unit) {
+private fun InformacoesAdicionais2() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(30.dp),
         horizontalArrangement = Arrangement.Center
     ) {
-        Text("Preciso de ajuda para iniciar a sessão", color = Color.LightGray)
+        Text("Preciso de ajuda para fazer o cadastro", color = Color.LightGray)
     }
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        Text("Não tem uma conta Steam?",
-            color = Color.White,
-            modifier = Modifier.clickable {
-                onClickCadastro()
-            }
-        )
+        Text("Já possui uma conta Steam?", color = Color.White)
     }
 }

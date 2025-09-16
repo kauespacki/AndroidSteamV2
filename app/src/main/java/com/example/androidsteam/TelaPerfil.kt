@@ -22,6 +22,8 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -49,11 +51,11 @@ class TelaPerfil : ComponentActivity() {
 @Composable
 @Preview
 fun PreviewTela2(){
-    Tela2 {}
+    Tela2({}, {})
 }
 
 @Composable
-fun Tela2(onClickInicio: () -> Unit){
+fun Tela2(onClickInicio: () -> Unit, onClickDetalhes: () -> Unit){
     Scaffold {
         Surface(modifier = Modifier.padding(it)) {
             Column(
@@ -63,7 +65,7 @@ fun Tela2(onClickInicio: () -> Unit){
             ) {
                 Cabecalho()
                 Nome()
-                EditarPerfil()
+                EditarPerfil(onClickDetalhes)
                 InformacoesAdicionais()
                 Spacer(modifier = Modifier.weight(1f))
                 Footer(onClickInicio)
@@ -107,7 +109,7 @@ private fun Nome() {
 }
 
 @Composable
-private fun EditarPerfil() {
+private fun EditarPerfil(onClickDetalhes: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -119,6 +121,19 @@ private fun EditarPerfil() {
 
     ) {
         Text("Editar Perfil", color = Color.White)
+    }
+    Button(
+        onClick = {
+            onClickDetalhes()
+        },
+        colors = ButtonDefaults.buttonColors(Color(0xFF2b3445)),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(15.dp, 5.dp)
+            .background(Color(0xFF2b3445))
+            .height(35.dp)
+    ) {
+        Text("Ver detalhes da conta", color = Color.White)
     }
 }
 
