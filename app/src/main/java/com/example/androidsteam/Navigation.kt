@@ -27,6 +27,9 @@ fun AppNavigation() {
             }
         ) }
         composable("telaDetalhesPerfil") { Tela4() }
-        composable("telaCadastro") { Tela5(onClickInicio = {navController.navigate("telaInicial")}) }
+        composable("telaCadastro") { Tela5(
+            onClickInicio = { navController.navigate("telaInicial") },
+            onClickLogin = { navController.navigate("telaLogin") }
+        ) }
     }
 }
