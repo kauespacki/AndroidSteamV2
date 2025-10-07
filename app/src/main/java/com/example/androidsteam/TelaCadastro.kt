@@ -2,6 +2,7 @@ package com.example.androidsteam
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,8 +37,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.androidsteam.Globals.usuarios
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TelaCadastro : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,7 +101,19 @@ private fun Formulario2(
     var senha1 by remember {
         mutableStateOf("")
     }
+
+    var usuarios by remember { mutableStateOf<List<Usuarios>>(emptyList()) }
+
     val context = LocalContext.current
+    val db = AppDatabase.getDatabase(context) // 1. Obtém a instância Singleton do AppDatabase.
+    val usuariosDao = db.usuariosDAO()           // 2. Obtém a instância do FilmesDAO.
+
+
+//    LaunchedEffect(Unit) {
+//        usuarios = buscarUsuarios(usuariosDao) // Chama a função que busca todos os filmes.
+//        Log.d("Busca ok", "... ${usuarios}")
+//    }
+
     Row(modifier = Modifier.height(30.dp)) {
         Text("NOME DE USUÁRIO STEAM", color = Color.LightGray)
     }
@@ -155,9 +171,9 @@ private fun Formulario2(
     Row(modifier = Modifier.height(70.dp)) {
         Button(
             onClick = {
-                usuarios.add(
-                    Usuario(1, usuario1, senha1)
-                )
+                CoroutineScope(Dispatchers.IO).launch {
+                    inserirUsuario(usuario1, senha1, usuariosDao)
+                }
                 Toast.makeText(context, "Cadastro efetuado.", Toast.LENGTH_SHORT).show()
             },
             modifier = Modifier.fillMaxWidth(),
@@ -194,5 +210,22 @@ private fun InformacoesAdicionais2(onClickLogin: () -> Unit) {
                 onClickLogin()
             },
             color = Color.White)
+    }
+}
+
+suspend fun inserirUsuario(nome: String, senha: String, usuariosDao: UsuariosDAO){
+    try{
+        usuariosDao.inserir(Usuarios(nome=nome, senha = senha)) // Chama o metodo de inserção do DAO.
+    }catch (e: Exception){
+        Log.e("Erro ao adicionar", "Msg: ${e.message}")
+    }
+}
+
+suspend fun buscarUsuarios(usuariosDao: UsuariosDAO): List<Usuarios> {
+    return try {
+        usuariosDao.buscarTodos() // Chama o método do DAO.
+    } catch (e: Exception) {
+        Log.e("Erro ao buscar", "${e.message}")
+        emptyList()
     }
 }

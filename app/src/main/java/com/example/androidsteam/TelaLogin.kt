@@ -35,7 +35,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.androidsteam.Globals.usuarios
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 
 
@@ -92,10 +91,10 @@ private fun Cabecalho() {
 private fun Formulario(
     onClickInicio: () -> Unit
 ) {
-    usuarios.add(Usuario(
-        1, "admin", "admin"
-        )
-    )
+//    usuarios.add(Usuario(
+//        1, "admin", "admin"
+//        )
+//    )
     var usuario1 by remember {
         mutableStateOf("")
     }
@@ -142,14 +141,14 @@ private fun Formulario(
     Row(modifier = Modifier.height(70.dp)) {
         Button(
             onClick = {
-                usuarios.forEach {
-                    if(it.nome == usuario1){
-                        if(it.senha == senha1){
-                            onClickInicio()
-                            c++
-                        }
-                    }
-                }
+//                usuarios.forEach {
+//                    if(it.nome == usuario1){
+//                        if(it.senha == senha1){
+//                            onClickInicio()
+//                            c++
+//                        }
+//                    }
+//                }
                 if(c == 0){
                     Toast.makeText(context, "Usuário não encontrado.", Toast.LENGTH_SHORT).show()
                 }
