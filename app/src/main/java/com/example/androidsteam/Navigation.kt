@@ -35,5 +35,9 @@ fun AppNavigation() {
             onClickInicio = { navController.navigate("telaInicial") },
             onClickLogin = { navController.navigate("telaLogin") }
         ) }
+        composable("telaPagJogo") { Tela6(
+            {{}}
+        ) }
+
     }
 }

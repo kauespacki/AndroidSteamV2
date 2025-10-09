@@ -66,12 +66,12 @@ class PagJogo : ComponentActivity() {
 
 @Composable
 @Preview
-fun PreviewTela4(){
-    Tela4 {}
+fun PreviewTela6(){
+    Tela6 {}
 }
 
 @Composable
-fun Tela4(onClickPerfil: () -> Unit){
+fun Tela6(onClickPerfil: () -> Unit){
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { paddingValues ->
