@@ -53,7 +53,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 
-class TelaInicial : ComponentActivity() {
+class PagJogo : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -66,12 +66,12 @@ class TelaInicial : ComponentActivity() {
 
 @Composable
 @Preview
-fun PreviewTela3(){
-    Tela3 {}
+fun PreviewTela4(){
+    Tela4 {}
 }
 
 @Composable
-fun Tela3(onClickPerfil: () -> Unit){
+fun Tela4(onClickPerfil: () -> Unit){
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { paddingValues ->
