@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -40,6 +41,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,6 +53,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import coil.compose.AsyncImage
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 
 class TelaInicial : ComponentActivity() {
@@ -72,6 +75,17 @@ fun PreviewTela3(){
 
 @Composable
 fun Tela3(onClickPerfil: () -> Unit){
+    val context = LocalContext.current
+    val db = AppDatabase.getDatabase(context) // 1. Obtém a instância Singleton do AppDatabase.
+    val jogosDao = db.jogosDAO()
+    var jogos by remember { mutableStateOf<List<Jogos>>(emptyList()) }
+
+    LaunchedEffect(Unit) {
+        jogos = buscarJogos(jogosDao) // Chama a função que busca todos os filmes.
+        Log.d("Busca ok", "... ${jogos}")
+    }
+
+
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { paddingValues ->
@@ -88,13 +102,19 @@ fun Tela3(onClickPerfil: () -> Unit){
             ) {
                 item { Bloco1() }
                 item { Bloco2() }
-                item { Bloco3() }
-                item { Bloco4() }
+                item { Bloco3()
+                    Text("OUTROS JOGOS", color = Color.White , modifier = Modifier.padding(0.dp,30.dp,0.dp,0.dp))
+                }
+
+
+                item { jogos.forEach{Bloco4(it.nome, it.preco, it.imagem)} }
             }
             Footer(onClickPerfil)
         }
     }
 }
+
+
 
 @Composable
 private fun Cabecalho() {
@@ -266,16 +286,15 @@ private fun Bloco3() {
 }
 
 @Composable
-private fun Bloco4() {
+private fun Bloco4(nome:String, preco:String, imagem:String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(330.dp)
+            .height(300.dp)
             .background(Color(0xFF1d405c))
     ) {
         Column {
 
-            Text("OUTROS JOGOS", color = Color.White , modifier = Modifier.padding(0.dp,30.dp,0.dp,0.dp))
             Card(
                 colors = CardDefaults.cardColors(
                     containerColor = Color(0xFF0A1821),
@@ -286,17 +305,17 @@ private fun Bloco4() {
             ){
 
                 Box(modifier = Modifier.height(190.dp).fillMaxWidth()
-                    .background(Color.Red)
+                    .background(Color(0xFF0A1821))
                 ){
-                    Image(
-                        painter = painterResource(id = R.drawable.bannerbmw),
-                        contentDescription = "imagem local",
+                    AsyncImage(
+                        model = imagem,
+                        contentDescription = "Imagem do jogo",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
-                Text("Black Myth: Wukong", style = MaterialTheme.typography.titleLarge, color = Color.White, modifier = Modifier.padding(5.dp, 0.dp, 0.dp, 0.dp))
-                Text("R$229,99", style = MaterialTheme.typography.titleMedium, color = Color.White, modifier = Modifier.padding(10.dp))
+                Text("$nome", style = MaterialTheme.typography.titleLarge, color = Color.White, modifier = Modifier.padding(5.dp, 0.dp, 0.dp, 0.dp))
+                Text("$preco", style = MaterialTheme.typography.titleMedium, color = Color.White, modifier = Modifier.padding(10.dp))
             }
 
         }
@@ -353,5 +372,14 @@ private fun Footer(onClickPerfil: () -> Unit) {
 
         )
 
+    }
+}
+
+suspend fun buscarJogos(jogosDao: JogosDAO): List<Jogos> {
+    return try {
+        jogosDao.buscarTodos() // Chama o método do DAO.
+    } catch (e: Exception) {
+        Log.e("Erro ao buscar", "${e.message}")
+        emptyList()
     }
 }
