@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -83,6 +84,7 @@ fun Tela3(onClickPerfil: () -> Unit){
                 item { Bloco1() }
                 item { Bloco2() }
                 item { Bloco3() }
+                item { Bloco4() }
             }
             Footer(onClickPerfil)
         }
@@ -177,8 +179,8 @@ private fun Bloco1() {
                         modifier = Modifier.fillMaxSize()
                     )
                 }
-                Text("The Last of Us Part I", style = MaterialTheme.typography.titleMedium, color = Color.White)
-                Text("-50% R$124,95", style = MaterialTheme.typography.titleSmall, color = Color(0XFFbce549))
+                Text("The Last of Us Part I", style = MaterialTheme.typography.titleLarge, color = Color.White, modifier = Modifier.padding(3.dp))
+                Text("-50% R$124,95", style = MaterialTheme.typography.titleMedium, color = Color(0XFFbce549), modifier = Modifier.padding(3.dp))
             }
 
         }
@@ -208,7 +210,7 @@ private fun Bloco3() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp)
+            .height(340.dp)
             .background(Color(0xFF1d405c))
     ) {
         Column {
@@ -233,15 +235,62 @@ private fun Bloco3() {
                         modifier = Modifier.fillMaxSize()
                     )
                 }
-                Text("OFERTA DO MEIO DA SEMANA", style = MaterialTheme.typography.titleMedium, color = Color.White)
-                Text("Oferta válida até 3 de set. às 14:00", color = Color.LightGray)
-                Text("-25% R$31,49", style = MaterialTheme.typography.titleLarge, color = Color(0XFFbce549))
+
+                Text("OFERTA DO MEIO DA SEMANA", style = MaterialTheme.typography.titleLarge, color = Color.White, modifier = Modifier.padding(5.dp,5.dp,0.dp,0.dp))
+                Text("Oferta válida até 3 de set. às 14:00", color = Color.LightGray, modifier = Modifier.padding(5.dp,0.dp,0.dp,0.dp))
+
+                Row(Modifier.padding(10.dp)) {
+                    Text("-25%", style = MaterialTheme.typography.headlineLarge, color = Color(0XFFbce549), modifier = Modifier.padding(5.dp,0.dp,0.dp,0.dp).background(Color(0xFF4c6b22)).height(36.dp).width(72.dp))
+                    Text("R$31,49", style = MaterialTheme.typography.titleLarge, color = Color(0XFFbce549), modifier = Modifier.background(Color(0xFF344654)).height(36.dp).width(85.dp))
+
+                }
+
             }
 
 
         }
     }
 }
+
+@Composable
+private fun Bloco4() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(330.dp)
+            .background(Color(0xFF1d405c))
+    ) {
+        Column {
+
+            Text("OUTROS JOGOS", color = Color.White , modifier = Modifier.padding(0.dp,30.dp,0.dp,0.dp))
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFF0A1821),
+                ),
+                shape = RectangleShape,
+                modifier = Modifier.padding(4.dp)
+
+            ){
+
+                Box(modifier = Modifier.height(190.dp).fillMaxWidth()
+                    .background(Color.Red)
+                ){
+                    Image(
+                        painter = painterResource(id = R.drawable.banner3),
+                        contentDescription = "imagem local",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+                Text("nome", style = MaterialTheme.typography.titleLarge, color = Color.White)
+                Text("R$31,49", style = MaterialTheme.typography.titleMedium, color = Color(0XFFbce549), modifier = Modifier.padding(10.dp))
+            }
+
+
+        }
+    }
+}
+
 
 @Composable
 private fun Footer(onClickPerfil: () -> Unit) {
