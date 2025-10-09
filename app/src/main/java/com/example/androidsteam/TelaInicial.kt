@@ -155,7 +155,7 @@ private fun Bloco1() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(322.dp)
+            .height(332.dp)
     ) {
         Column {
 
@@ -237,7 +237,7 @@ private fun Bloco3() {
                 }
 
                 Text("OFERTA DO MEIO DA SEMANA", style = MaterialTheme.typography.titleLarge, color = Color.White, modifier = Modifier.padding(5.dp,5.dp,0.dp,0.dp))
-                Text("Oferta válida até 3 de set. às 14:00", color = Color.LightGray, modifier = Modifier.padding(5.dp,0.dp,0.dp,0.dp))
+                Text("Oferta válida até 3 de set. às 14:00", color = Color.LightGray, modifier = Modifier.padding(8.dp,0.dp,0.dp,0.dp))
 
                 Row(Modifier.padding(10.dp)) {
                     Text("-25%", style = MaterialTheme.typography.headlineLarge, color = Color(0XFFbce549), modifier = Modifier.padding(5.dp,0.dp,0.dp,0.dp).background(Color(0xFF4c6b22)).height(36.dp).width(72.dp))
@@ -276,16 +276,15 @@ private fun Bloco4() {
                     .background(Color.Red)
                 ){
                     Image(
-                        painter = painterResource(id = R.drawable.banner3),
+                        painter = painterResource(id = R.drawable.bannerbmw),
                         contentDescription = "imagem local",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
-                Text("nome", style = MaterialTheme.typography.titleLarge, color = Color.White)
-                Text("R$31,49", style = MaterialTheme.typography.titleMedium, color = Color(0XFFbce549), modifier = Modifier.padding(10.dp))
+                Text("Black Myth: Wukong", style = MaterialTheme.typography.titleLarge, color = Color.White, modifier = Modifier.padding(5.dp, 0.dp, 0.dp, 0.dp))
+                Text("R$229,99", style = MaterialTheme.typography.titleMedium, color = Color.White, modifier = Modifier.padding(10.dp))
             }
-
 
         }
     }
