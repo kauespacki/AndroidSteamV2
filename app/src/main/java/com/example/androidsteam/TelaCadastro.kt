@@ -220,12 +220,3 @@ suspend fun inserirUsuario(nome: String, senha: String, usuariosDao: UsuariosDAO
         Log.e("Erro ao adicionar", "Msg: ${e.message}")
     }
 }
-
-suspend fun buscarUsuarios(usuariosDao: UsuariosDAO): List<Usuarios> {
-    return try {
-        usuariosDao.buscarTodos() // Chama o método do DAO.
-    } catch (e: Exception) {
-        Log.e("Erro ao buscar", "${e.message}")
-        emptyList()
-    }
-}

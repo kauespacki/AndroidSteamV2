@@ -2,6 +2,7 @@ package com.example.androidsteam
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,6 +61,14 @@ fun PreviewTela1(){
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Tela1(onClickInicio: () -> Unit, onClickCadastro: () -> Unit){
+    val context = LocalContext.current
+    val db = AppDatabase.getDatabase(context) // 1. Obtém a instância Singleton do AppDatabase.
+    val usuariosDao = db.usuariosDAO() // 2. Obtém a instância do FilmesDAO.
+    var usuarios by remember { mutableStateOf<List<Usuarios>>(emptyList()) }
+    LaunchedEffect(Unit) {
+        usuarios = buscarUsuarios(usuariosDao) // Chama a função que busca todos os filmes.
+        Log.d("Busca ok", "... ${usuarios}")
+    }
     Scaffold {
         Surface(modifier = Modifier.padding(it)) {
             Column(
@@ -68,7 +78,7 @@ fun Tela1(onClickInicio: () -> Unit, onClickCadastro: () -> Unit){
                     .padding(10.dp)
             ) {
                 Cabecalho()
-                Formulario(onClickInicio)
+                Formulario(onClickInicio, usuarios)
                 InformacoesAdicionais(onClickCadastro)
             }
         }
@@ -89,12 +99,9 @@ private fun Cabecalho() {
 
 @Composable
 private fun Formulario(
-    onClickInicio: () -> Unit
+    onClickInicio: () -> Unit,
+    usuarios: List<Usuarios>
 ) {
-//    usuarios.add(Usuario(
-//        1, "admin", "admin"
-//        )
-//    )
     var usuario1 by remember {
         mutableStateOf("")
     }
@@ -141,14 +148,14 @@ private fun Formulario(
     Row(modifier = Modifier.height(70.dp)) {
         Button(
             onClick = {
-//                usuarios.forEach {
-//                    if(it.nome == usuario1){
-//                        if(it.senha == senha1){
-//                            onClickInicio()
-//                            c++
-//                        }
-//                    }
-//                }
+                usuarios.forEach {
+                    if(it.nome == usuario1){
+                        if(it.senha == senha1){
+                            onClickInicio()
+                            c++
+                        }
+                    }
+                }
                 if(c == 0){
                     Toast.makeText(context, "Usuário não encontrado.", Toast.LENGTH_SHORT).show()
                 }
@@ -188,5 +195,14 @@ private fun InformacoesAdicionais(onClickCadastro: () -> Unit) {
                 onClickCadastro()
             }
         )
+    }
+}
+
+suspend fun buscarUsuarios(usuariosDao: UsuariosDAO): List<Usuarios> {
+    return try {
+        usuariosDao.buscarTodos() // Chama o método do DAO.
+    } catch (e: Exception) {
+        Log.e("Erro ao buscar", "${e.message}")
+        emptyList()
     }
 }
