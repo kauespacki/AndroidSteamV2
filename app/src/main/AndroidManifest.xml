@@ -14,6 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidSteam">
         <activity
+            android:name=".TelaAdmin"
+            android:exported="false"
+            android:label="@string/title_activity_tela_admin"
+            android:theme="@style/Theme.AndroidSteam" />
+        <activity
             android:name=".TelaCadastro"
             android:exported="false"
             android:label="@string/title_activity_tela_cadastro"
