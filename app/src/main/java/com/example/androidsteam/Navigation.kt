@@ -24,9 +24,13 @@ fun AppNavigation() {
             },
             onClickDetalhes = {
                 navController.navigate("telaDetalhesPerfil")
+            },
+            onClickAdmin = {
+                navController.navigate("telaAdmin")
             }
         ) }
         composable("telaDetalhesPerfil") { Tela4(onClickInicio = {navController.navigate("telaInicial")}) }
+        composable("telaAdmin") { TelaAdminPanel() }
         composable("telaCadastro") { Tela5(
             onClickInicio = { navController.navigate("telaInicial") },
             onClickLogin = { navController.navigate("telaLogin") }

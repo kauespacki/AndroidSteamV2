@@ -51,11 +51,11 @@ class TelaPerfil : ComponentActivity() {
 @Composable
 @Preview
 fun PreviewTela2(){
-    Tela2({}, {})
+    Tela2({}, {}, {})
 }
 
 @Composable
-fun Tela2(onClickInicio: () -> Unit, onClickDetalhes: () -> Unit){
+fun Tela2(onClickInicio: () -> Unit, onClickDetalhes: () -> Unit, onClickAdmin: () -> Unit){
     Scaffold {
         Surface(modifier = Modifier.padding(it)) {
             Column(
@@ -65,7 +65,7 @@ fun Tela2(onClickInicio: () -> Unit, onClickDetalhes: () -> Unit){
             ) {
                 Cabecalho()
                 Nome()
-                EditarPerfil(onClickDetalhes)
+                EditarPerfil(onClickDetalhes, onClickAdmin)
                 InformacoesAdicionais()
                 Spacer(modifier = Modifier.weight(1f))
                 Footer(onClickInicio)
@@ -109,7 +109,7 @@ private fun Nome() {
 }
 
 @Composable
-private fun EditarPerfil(onClickDetalhes: () -> Unit) {
+private fun EditarPerfil(onClickDetalhes: () -> Unit, onClickAdmin: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -134,6 +134,20 @@ private fun EditarPerfil(onClickDetalhes: () -> Unit) {
             .height(35.dp)
     ) {
         Text("Ver detalhes da conta", color = Color.White)
+    }
+
+    Button(
+        onClick = {
+            onClickAdmin()
+        },
+        colors = ButtonDefaults.buttonColors(Color(0xFF2b3445)),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(15.dp, 5.dp)
+            .background(Color(0xFF2b3445))
+            .height(35.dp)
+    ) {
+        Text("Ir para o painel do admin", color = Color.White)
     }
 }
 

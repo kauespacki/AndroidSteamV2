@@ -12,7 +12,7 @@ interface JogosDAO{
     @Insert
     suspend fun inserir(jogo: Jogos)
 
-    @Query("SELECT * FROM usuarios")
+    @Query("SELECT * FROM jogos")
     suspend fun buscarTodos() : List<Jogos>
 
     @Delete
