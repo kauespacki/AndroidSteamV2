@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface JogosDAO{
@@ -13,7 +14,7 @@ interface JogosDAO{
     suspend fun inserir(jogo: Jogos)
 
     @Query("SELECT * FROM jogos")
-    suspend fun buscarTodos() : List<Jogos>
+    fun buscarTodos() : Flow<List<Jogos>>
 
     @Delete
     suspend fun deletar(jogos: Jogos)
