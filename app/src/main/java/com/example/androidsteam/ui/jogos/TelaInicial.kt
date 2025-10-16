@@ -58,18 +58,10 @@ import com.example.androidsteam.R
 import com.example.androidsteam.data.local.AppDatabase
 import com.example.androidsteam.data.local.Jogos
 import com.example.androidsteam.data.local.JogosDAO
+import com.example.androidsteam.data.repository.JogosRepository
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 
-class TelaInicial : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            AndroidSteamTheme {
-            }
-        }
-    }
-}
+
 
 @Composable
 @Preview
@@ -77,7 +69,26 @@ fun PreviewTela3(){
     Tela3 {}
 }
 
+
+
 @Composable
+fun TelaInicial(
+    viewModel: JogosViewModel = viewModel(
+        factory = JogosViewModelFactory(
+            JogosRepository(
+                AppDatabase.getDatabase(
+                    LocalContext.current
+                ).jogosDAO()
+            )
+        )
+    )
+) {
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+}
+
+
+    @Composable
 fun Tela3(onClickPerfil: () -> Unit){
     val context = LocalContext.current
     val db = AppDatabase.getDatabase(context) // 1. Obtém a instância Singleton do AppDatabase.

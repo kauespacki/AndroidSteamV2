@@ -37,9 +37,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androidsteam.data.local.AppDatabase
 import com.example.androidsteam.data.local.Usuarios
 import com.example.androidsteam.data.local.UsuariosDAO
+import com.example.androidsteam.data.repository.UsuariosRepository
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 
 
@@ -63,15 +66,14 @@ fun PreviewTela1(){
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Tela1(onClickInicio: () -> Unit, onClickCadastro: () -> Unit){
-    val context = LocalContext.current
-    val db = AppDatabase.getDatabase(context) // 1. Obtém a instância Singleton do AppDatabase.
-    val usuariosDao = db.usuariosDAO() // 2. Obtém a instância do FilmesDAO.
-    var usuarios by remember { mutableStateOf<List<Usuarios>>(emptyList()) }
-    LaunchedEffect(Unit) {
-        usuarios = buscarUsuarios(usuariosDao) // Chama a função que busca todos os filmes.
-        Log.d("Busca ok", "... ${usuarios}")
-    }
+fun Tela1(
+
+    onClickInicio: () -> Unit, onClickCadastro: () -> Unit
+) {
+
+
+
+
     Scaffold {
         Surface(modifier = Modifier.padding(it)) {
             Column(
@@ -81,7 +83,7 @@ fun Tela1(onClickInicio: () -> Unit, onClickCadastro: () -> Unit){
                     .padding(10.dp)
             ) {
                 Cabecalho()
-                Formulario(onClickInicio, usuarios)
+                Formulario(onClickInicio)
                 InformacoesAdicionais(onClickCadastro)
             }
         }
@@ -103,7 +105,15 @@ private fun Cabecalho() {
 @Composable
 private fun Formulario(
     onClickInicio: () -> Unit,
-    usuarios: List<Usuarios>
+    viewModel: UsuariosViewModel = viewModel(
+        factory = UsuariosViewModelFactory(
+            UsuariosRepository(
+                AppDatabase.getDatabase(
+                    LocalContext.current
+                ).usuariosDAO()
+            )
+        )
+    )
 ) {
     var usuario1 by remember {
         mutableStateOf("")
@@ -111,6 +121,9 @@ private fun Formulario(
     var senha1 by remember {
         mutableStateOf("")
     }
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     Row(modifier = Modifier.height(30.dp)) {
         Text("NOME DE USUÁRIO STEAM", color = Color.LightGray)
     }
@@ -128,8 +141,9 @@ private fun Formulario(
             )
         )
     }
+
     val context = LocalContext.current
-    var c = 0
+
     Row(modifier = Modifier.height(30.dp)) {
         Text("SENHA", color = Color.LightGray)
     }
@@ -151,17 +165,18 @@ private fun Formulario(
     Row(modifier = Modifier.height(70.dp)) {
         Button(
             onClick = {
-                usuarios.forEach {
-                    if(it.nome == usuario1){
-                        if(it.senha == senha1){
-                            onClickInicio()
-                            c++
-                        }
+                viewModel.validarLogin(
+                    nome = usuario1,
+                    senha = senha1,
+                    onSuccess = {
+                        onClickInicio()
+
+                    },
+                    onError = {
+                        Toast.makeText(context, "Usuário não encontrado.", Toast.LENGTH_SHORT).show()
                     }
-                }
-                if(c == 0){
-                    Toast.makeText(context, "Usuário não encontrado.", Toast.LENGTH_SHORT).show()
-                }
+                )
+
             },
             modifier = Modifier.fillMaxWidth(),
             shape = RectangleShape,
@@ -201,6 +216,7 @@ private fun InformacoesAdicionais(onClickCadastro: () -> Unit) {
     }
 }
 
+/*
 suspend fun buscarUsuarios(usuariosDao: UsuariosDAO): List<Usuarios> {
     return try {
         usuariosDao.buscarTodos() // Chama o método do DAO.
@@ -209,3 +225,5 @@ suspend fun buscarUsuarios(usuariosDao: UsuariosDAO): List<Usuarios> {
         emptyList()
     }
 }
+
+ */

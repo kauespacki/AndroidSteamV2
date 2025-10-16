@@ -22,4 +22,7 @@ interface UsuariosDAO{
     @Update
     suspend fun atualizar(usuarios: Usuarios)
 
+    @Query("SELECT * FROM usuarios WHERE nome = :nome AND senha = :senha LIMIT 1")
+    suspend fun buscarPorNomeESenha(nome: String, senha: String): Usuarios?
+
 }

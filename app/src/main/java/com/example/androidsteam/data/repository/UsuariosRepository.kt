@@ -22,4 +22,8 @@ class UsuariosRepository (private val usuariosDAO: UsuariosDAO) {
     suspend fun deletar(usuario: Usuarios){
         usuariosDAO.deletar(usuario)
     }
+
+    suspend fun buscarUsuario(nome: String, senha: String): Usuarios? {
+        return usuariosDAO.buscarPorNomeESenha(nome, senha)
+    }
 }
