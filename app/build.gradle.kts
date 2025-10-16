@@ -60,9 +60,24 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
 
     val room_version = "2.8.0"
-    implementation("androidx.room:room-runtime:${room_version}")
+
+    implementation("androidx.room:room-runtime:$room_version")
+
+    // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
+    // See Add the KSP plugin to your project
     ksp("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:${room_version}")
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
+
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0")
+
+    // Integração do ViewModel com Jetpack Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
+
+    // Coleta de StateFlow de forma segura no ciclo de vida do Compose (para o collectAsStateWithLifecycle)
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.0")
 
     implementation(libs.androidx.navigation.compose)
 }

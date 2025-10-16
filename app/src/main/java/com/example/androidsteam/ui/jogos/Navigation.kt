@@ -1,4 +1,4 @@
-package com.example.androidsteam
+package com.example.androidsteam.ui.jogos
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost

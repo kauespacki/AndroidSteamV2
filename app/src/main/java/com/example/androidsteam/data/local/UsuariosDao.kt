@@ -1,4 +1,4 @@
-package com.example.androidsteam
+package com.example.androidsteam.data.local
 
 import androidx.room.Dao
 import androidx.room.Delete

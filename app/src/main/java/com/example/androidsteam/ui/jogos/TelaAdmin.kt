@@ -1,4 +1,4 @@
-package com.example.androidsteam
+package com.example.androidsteam.ui.jogos
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -12,6 +12,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.androidsteam.data.local.AppDatabase
+import com.example.androidsteam.data.local.Jogos
+import com.example.androidsteam.data.local.Usuarios
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 import kotlinx.coroutines.launch
 

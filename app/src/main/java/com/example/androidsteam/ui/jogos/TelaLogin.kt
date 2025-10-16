@@ -1,4 +1,4 @@
-package com.example.androidsteam
+package com.example.androidsteam.ui.jogos
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -37,6 +37,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.androidsteam.data.local.AppDatabase
+import com.example.androidsteam.data.local.Usuarios
+import com.example.androidsteam.data.local.UsuariosDAO
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 
 
@@ -46,7 +49,7 @@ class TelaLogin : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidSteamTheme {
-                AppNavigation()
+
             }
         }
     }

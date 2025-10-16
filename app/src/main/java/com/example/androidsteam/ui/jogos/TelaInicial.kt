@@ -1,4 +1,4 @@
-package com.example.androidsteam
+package com.example.androidsteam.ui.jogos
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -54,6 +54,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
+import com.example.androidsteam.R
+import com.example.androidsteam.data.local.AppDatabase
+import com.example.androidsteam.data.local.Jogos
+import com.example.androidsteam.data.local.JogosDAO
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 
 class TelaInicial : ComponentActivity() {
@@ -107,7 +111,7 @@ fun Tela3(onClickPerfil: () -> Unit){
                 }
 
 
-                item { jogos.forEach{Bloco4(it.nome, it.preco, it.imagem)} }
+                item { jogos.forEach{ Bloco4(it.nome, it.preco, it.imagem) } }
             }
             Footer(onClickPerfil)
         }
