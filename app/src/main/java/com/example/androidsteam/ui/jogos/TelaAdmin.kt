@@ -12,33 +12,36 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androidsteam.data.local.AppDatabase
 import com.example.androidsteam.data.local.Jogos
 import com.example.androidsteam.data.local.Usuarios
+import com.example.androidsteam.data.repository.JogosRepository
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun TelaAdminPanel() {
+fun TelaAdminPanel(
+    viewModel: JogosViewModel = viewModel(
+        factory = FilmesViewModelFactory(
+            JogosRepository(
+                AppDatabase.getDatabase(
+                    LocalContext.current
+                ).jogosDAO()
+            )
+        )
+    )
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val db = AppDatabase.getDatabase(context)
-    val usuariosDao = db.usuariosDAO()
-    val jogosDao = db.jogosDAO()
     val scope = rememberCoroutineScope()
 
-    var usuarios by remember { mutableStateOf(emptyList<Usuarios>()) }
-    var jogos by remember { mutableStateOf(emptyList<Jogos>()) }
-
     var showUsuarioDialog by remember { mutableStateOf(false) }
-    var usuarioParaEditar by remember { mutableStateOf<Usuarios?>(null) }
-
     var showJogoDialog by remember { mutableStateOf(false) }
-    var jogoParaEditar by remember { mutableStateOf<Jogos?>(null) }
 
-    LaunchedEffect(Unit) {
-        usuarios = usuariosDao.buscarTodos()
-        jogos = jogosDao.buscarTodos()
-    }
+    var usuarioParaEditar by remember { mutableStateOf<Usuarios?>(null) }
+    var jogoParaEditar by remember { mutableStateOf<Jogos?>(null) }
 
     Column(
         modifier = Modifier
@@ -67,24 +70,24 @@ fun TelaAdminPanel() {
         Spacer(modifier = Modifier.height(12.dp))
 
         LazyColumn {
-            items(usuarios.size) { index ->
-                val usuario = usuarios[index]
-                AdminCard(
-                    title = usuario.nome,
-                    descricao = "ID: ${usuario.id}",
-                    onEdit = {
-                        usuarioParaEditar = usuario
-                        showUsuarioDialog = true
-                    },
-                    onDelete = {
-                        scope.launch {
-                            usuariosDao.deletar(usuario)
-                            usuarios = usuariosDao.buscarTodos()
-                            Toast.makeText(context, "Usuário removido.", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                )
-            }
+//            items(usuarios.size) { index ->
+//                val usuario = usuarios[index]
+//                AdminCard(
+//                    title = usuario.nome,
+//                    descricao = "ID: ${usuario.id}",
+//                    onEdit = {
+//                        usuarioParaEditar = usuario
+//                        showUsuarioDialog = true
+//                    },
+//                    onDelete = {
+//                        scope.launch {
+//                            usuariosDao.deletar(usuario)
+//                            usuarios = usuariosDao.buscarTodos()
+//                            Toast.makeText(context, "Usuário removido.", Toast.LENGTH_SHORT).show()
+//                        }
+//                    }
+//                )
+//            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -129,25 +132,25 @@ fun TelaAdminPanel() {
     }
 
     // ==== DIALOGOS ====
-    if (showUsuarioDialog) {
-        UsuarioDialog(
-            usuario = usuarioParaEditar,
-            onDismiss = { showUsuarioDialog = false },
-            onSave = { usuario ->
-                scope.launch {
-                    if (usuarioParaEditar == null) {
-                        usuariosDao.inserir(usuario)
-                        Toast.makeText(context, "Usuário adicionado!", Toast.LENGTH_SHORT).show()
-                    } else {
-                        usuariosDao.atualizar(usuario)
-                        Toast.makeText(context, "Usuário atualizado!", Toast.LENGTH_SHORT).show()
-                    }
-                    usuarios = usuariosDao.buscarTodos()
-                    showUsuarioDialog = false
-                }
-            }
-        )
-    }
+//    if (showUsuarioDialog) {
+//        UsuarioDialog(
+//            usuario = usuarioParaEditar,
+//            onDismiss = { showUsuarioDialog = false },
+//            onSave = { usuario ->
+//                scope.launch {
+//                    if (usuarioParaEditar == null) {
+//                        usuariosDao.inserir(usuario)
+//                        Toast.makeText(context, "Usuário adicionado!", Toast.LENGTH_SHORT).show()
+//                    } else {
+//                        usuariosDao.atualizar(usuario)
+//                        Toast.makeText(context, "Usuário atualizado!", Toast.LENGTH_SHORT).show()
+//                    }
+//                    usuarios = usuariosDao.buscarTodos()
+//                    showUsuarioDialog = false
+//                }
+//            }
+//        )
+//    }
 
     if (showJogoDialog) {
         JogoDialog(
@@ -156,13 +159,13 @@ fun TelaAdminPanel() {
             onSave = { jogo ->
                 scope.launch {
                     if (jogoParaEditar == null) {
-                        jogosDao.inserir(jogo)
+                        viewModel.onSalvar()
                         Toast.makeText(context, "Jogo adicionado!", Toast.LENGTH_SHORT).show()
                     } else {
-                        jogosDao.atualizar(jogo)
+                        viewModel.onEditar(jogo)
                         Toast.makeText(context, "Jogo atualizado!", Toast.LENGTH_SHORT).show()
                     }
-                    jogos = jogosDao.buscarTodos()
+                    jogos = uiState.listaDeJogos
                     showJogoDialog = false
                 }
             }
@@ -296,6 +299,11 @@ fun JogoDialog(jogo: Jogos?, onDismiss: () -> Unit, onSave: (Jogos) -> Unit) {
         textContentColor = Color.White
     )
 }
+
+
+
+
+
 
 @Composable
 fun fieldColors() = TextFieldDefaults.colors(

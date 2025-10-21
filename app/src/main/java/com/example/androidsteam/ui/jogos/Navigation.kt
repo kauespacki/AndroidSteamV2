@@ -8,33 +8,49 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "telaLogin"){
-        composable("telaLogin") { Tela1(
-            onClickInicio = {
-                navController.navigate("telaInicial")
-            },
-            onClickCadastro = {
-                navController.navigate("telaCadastro")
-            }
-        ) }
-        composable("telaInicial") { Tela3{navController.navigate("telaPerfil")} }
-        composable("telaPerfil") { Tela2(
-            onClickInicio = {
-                navController.navigate("telaInicial")
-            },
-            onClickDetalhes = {
-                navController.navigate("telaDetalhesPerfil")
-            },
-            onClickAdmin = {
-                navController.navigate("telaAdmin")
-            }
-        ) }
-        composable("telaDetalhesPerfil") { Tela4(onClickInicio = {navController.navigate("telaInicial")}) }
-        composable("telaAdmin") { TelaAdminPanel() }
-        composable("telaCadastro") { Tela5(
-            onClickInicio = { navController.navigate("telaInicial") },
-            onClickLogin = { navController.navigate("telaLogin") }
-        ) }
 
+    NavHost(navController = navController, startDestination = "telaLogin"){
+        composable("telaLogin") {
+            Tela1(
+                onClickInicio = {
+                    navController.navigate("telaInicial")
+                },
+                onClickCadastro = {
+                    navController.navigate("telaCadastro")
+                }
+            )
+        }
+        composable("telaInicial") {
+            Tela3 {
+                navController.navigate("telaPerfil")
+            }
+        }
+        composable("telaPerfil") {
+            Tela2(
+                onClickInicio = {
+                    navController.navigate("telaInicial")
+                },
+                onClickDetalhes = {
+                    navController.navigate("telaDetalhesPerfil")
+                },
+                onClickAdmin = {
+                    navController.navigate("telaAdmin")
+                }
+            )
+        }
+        composable("telaDetalhesPerfil") {
+            Tela4 {
+                navController.navigate("telaInicial")
+            }
+        }
+        composable("telaAdmin") {
+            TelaAdminPanel()
+        }
+        composable("telaCadastro") {
+            Tela5(
+                onClickInicio = { navController.navigate("telaInicial") },
+                onClickLogin = { navController.navigate("telaLogin") }
+            )
+        }
     }
 }
