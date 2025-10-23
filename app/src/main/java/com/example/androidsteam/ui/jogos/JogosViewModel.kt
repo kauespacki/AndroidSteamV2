@@ -103,7 +103,7 @@ class JogosViewModel(private val repository: JogosRepository) : ViewModel() {
     }
 }
 
-class FilmesViewModelFactory(private val repository: JogosRepository) : ViewModelProvider.Factory{
+class JogosViewModelFactory(private val repository: JogosRepository) : ViewModelProvider.Factory{
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(JogosViewModel::class.java)){
             @Suppress("UNCHECKED_CAST")

@@ -2,7 +2,6 @@ package com.example.androidsteam.ui.jogos
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,8 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androidsteam.data.local.AppDatabase
-import com.example.androidsteam.data.local.Usuarios
-import com.example.androidsteam.data.local.UsuariosDAO
 import com.example.androidsteam.data.repository.UsuariosRepository
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 
@@ -115,7 +111,9 @@ private fun Formulario(
         )
     )
 ) {
-    var usuario1 by remember {
+
+
+     var usuario1 by remember {
         mutableStateOf("")
     }
     var senha1 by remember {
