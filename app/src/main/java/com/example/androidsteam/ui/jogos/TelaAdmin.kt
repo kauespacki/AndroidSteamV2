@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TelaAdminPanel(
     viewModel: JogosViewModel = viewModel(
-        factory = FilmesViewModelFactory(
+        factory = JogosViewModelFactory(
             JogosRepository(
                 AppDatabase.getDatabase(
                     LocalContext.current
@@ -37,65 +38,25 @@ fun TelaAdminPanel(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    var showUsuarioDialog by remember { mutableStateOf(false) }
     var showJogoDialog by remember { mutableStateOf(false) }
-
-    var usuarioParaEditar by remember { mutableStateOf<Usuarios?>(null) }
     var jogoParaEditar by remember { mutableStateOf<Jogos?>(null) }
 
+    // Layout principal
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF1c293a))
             .padding(16.dp)
     ) {
+        // Cabeçalho
         Text("🛠️ Painel do Administrador", style = MaterialTheme.typography.headlineMedium, color = Color.White)
         Spacer(modifier = Modifier.height(24.dp))
 
-        // ==== USUÁRIOS ====
-        Text("👤 Gerenciar Usuários", color = Color(0xFF6fbdec))
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(
-            onClick = {
-                usuarioParaEditar = null
-                showUsuarioDialog = true
-            },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF216cad))
-        ) {
-            Text("➕ Adicionar Usuário", color = Color.White)
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        LazyColumn {
-//            items(usuarios.size) { index ->
-//                val usuario = usuarios[index]
-//                AdminCard(
-//                    title = usuario.nome,
-//                    descricao = "ID: ${usuario.id}",
-//                    onEdit = {
-//                        usuarioParaEditar = usuario
-//                        showUsuarioDialog = true
-//                    },
-//                    onDelete = {
-//                        scope.launch {
-//                            usuariosDao.deletar(usuario)
-//                            usuarios = usuariosDao.buscarTodos()
-//                            Toast.makeText(context, "Usuário removido.", Toast.LENGTH_SHORT).show()
-//                        }
-//                    }
-//                )
-//            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // ==== JOGOS ====
+        // Seção de Gerenciamento de Jogos
         Text("🎮 Gerenciar Jogos", color = Color(0xFF6fbdec))
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Botão para adicionar jogo
         Button(
             onClick = {
                 jogoParaEditar = null
@@ -109,9 +70,9 @@ fun TelaAdminPanel(
 
         Spacer(modifier = Modifier.height(12.dp))
 
+        // Lista de Jogos
         LazyColumn {
-            items(jogos.size) { index ->
-                val jogo = jogos[index]
+            items(uiState.listaDeJogos) { jogo ->
                 AdminCard(
                     title = jogo.nome,
                     descricao = "R$ ${jogo.preco} - ID: ${jogo.id}",
@@ -120,54 +81,23 @@ fun TelaAdminPanel(
                         showJogoDialog = true
                     },
                     onDelete = {
-                        scope.launch {
-                            jogosDao.deletar(jogo)
-                            jogos = jogosDao.buscarTodos()
-                            Toast.makeText(context, "Jogo removido.", Toast.LENGTH_SHORT).show()
-                        }
+                        viewModel.onDeletar(jogo)
+                        Toast.makeText(context, "Jogo removido.", Toast.LENGTH_SHORT).show()
                     }
                 )
             }
         }
     }
 
-    // ==== DIALOGOS ====
-//    if (showUsuarioDialog) {
-//        UsuarioDialog(
-//            usuario = usuarioParaEditar,
-//            onDismiss = { showUsuarioDialog = false },
-//            onSave = { usuario ->
-//                scope.launch {
-//                    if (usuarioParaEditar == null) {
-//                        usuariosDao.inserir(usuario)
-//                        Toast.makeText(context, "Usuário adicionado!", Toast.LENGTH_SHORT).show()
-//                    } else {
-//                        usuariosDao.atualizar(usuario)
-//                        Toast.makeText(context, "Usuário atualizado!", Toast.LENGTH_SHORT).show()
-//                    }
-//                    usuarios = usuariosDao.buscarTodos()
-//                    showUsuarioDialog = false
-//                }
-//            }
-//        )
-//    }
-
+    // Exibir o diálogo para adicionar ou editar jogo
     if (showJogoDialog) {
         JogoDialog(
             jogo = jogoParaEditar,
             onDismiss = { showJogoDialog = false },
             onSave = { jogo ->
-                scope.launch {
-                    if (jogoParaEditar == null) {
-                        viewModel.onSalvar()
-                        Toast.makeText(context, "Jogo adicionado!", Toast.LENGTH_SHORT).show()
-                    } else {
-                        viewModel.onEditar(jogo)
-                        Toast.makeText(context, "Jogo atualizado!", Toast.LENGTH_SHORT).show()
-                    }
-                    jogos = uiState.listaDeJogos
-                    showJogoDialog = false
-                }
+                viewModel.onSalvar()
+                Toast.makeText(context, if (jogoParaEditar == null) "Jogo adicionado!" else "Jogo atualizado!", Toast.LENGTH_SHORT).show()
+                showJogoDialog = false
             }
         )
     }
@@ -199,51 +129,6 @@ fun AdminCard(
                 .padding(8.dp))
         }
     }
-}
-
-@Composable
-fun UsuarioDialog(usuario: Usuarios?, onDismiss: () -> Unit, onSave: (Usuarios) -> Unit) {
-    var nome by remember { mutableStateOf(usuario?.nome ?: "") }
-    var senha by remember { mutableStateOf(usuario?.senha ?: "") }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            Button(onClick = {
-                if (nome.isNotBlank() && senha.isNotBlank()) {
-                    onSave(Usuarios(id = usuario?.id ?: 0, nome = nome, senha = senha))
-                }
-            }) {
-                Text("Salvar")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancelar") }
-        },
-        title = { Text(if (usuario == null) "Adicionar Usuário" else "Editar Usuário") },
-        text = {
-            Column {
-                Text("Nome", color = Color.Gray)
-                TextField(
-                    value = nome,
-                    onValueChange = { nome = it },
-                    singleLine = true,
-                    colors = fieldColors()
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("Senha", color = Color.Gray)
-                TextField(
-                    value = senha,
-                    onValueChange = { senha = it },
-                    singleLine = true,
-                    colors = fieldColors()
-                )
-            }
-        },
-        containerColor = Color(0xFF1c293a),
-        titleContentColor = Color.White,
-        textContentColor = Color.White
-    )
 }
 
 @Composable
@@ -300,11 +185,6 @@ fun JogoDialog(jogo: Jogos?, onDismiss: () -> Unit, onSave: (Jogos) -> Unit) {
     )
 }
 
-
-
-
-
-
 @Composable
 fun fieldColors() = TextFieldDefaults.colors(
     focusedContainerColor = Color(0xFF202126),
@@ -312,11 +192,3 @@ fun fieldColors() = TextFieldDefaults.colors(
     focusedTextColor = Color.White,
     unfocusedTextColor = Color.White
 )
-
-@Preview(showBackground = true)
-@Composable
-fun TelaAdminPanelPreview() {
-    AndroidSteamTheme {
-        TelaAdminPanel()
-    }
-}
