@@ -11,20 +11,25 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androidsteam.data.local.AppDatabase
 import com.example.androidsteam.data.local.Jogos
-import com.example.androidsteam.data.local.Usuarios
 import com.example.androidsteam.data.repository.JogosRepository
-import com.example.androidsteam.ui.theme.AndroidSteamTheme
-import kotlinx.coroutines.launch
 
 @Composable
 fun TelaAdminPanel(
-    viewModel: JogosViewModel = viewModel(
+    viewModelJogos: JogosViewModel = viewModel(
+        factory = JogosViewModelFactory(
+            JogosRepository(
+                AppDatabase.getDatabase(
+                    LocalContext.current
+                ).jogosDAO()
+            )
+        )
+    ),
+    viewModelUsuarios: JogosViewModel = viewModel(
         factory = JogosViewModelFactory(
             JogosRepository(
                 AppDatabase.getDatabase(
@@ -34,7 +39,7 @@ fun TelaAdminPanel(
         )
     )
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModelJogos.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -81,7 +86,7 @@ fun TelaAdminPanel(
                         showJogoDialog = true
                     },
                     onDelete = {
-                        viewModel.onDeletar(jogo)
+//                        viewModel.onDeletar(jogo)
                         Toast.makeText(context, "Jogo removido.", Toast.LENGTH_SHORT).show()
                     }
                 )
@@ -95,7 +100,7 @@ fun TelaAdminPanel(
             jogo = jogoParaEditar,
             onDismiss = { showJogoDialog = false },
             onSave = { jogo ->
-                viewModel.onSalvar()
+                viewModelJogos.onSalvar()
                 Toast.makeText(context, if (jogoParaEditar == null) "Jogo adicionado!" else "Jogo atualizado!", Toast.LENGTH_SHORT).show()
                 showJogoDialog = false
             }

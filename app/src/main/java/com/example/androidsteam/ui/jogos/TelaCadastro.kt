@@ -36,9 +36,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androidsteam.data.local.AppDatabase
 import com.example.androidsteam.data.local.Usuarios
 import com.example.androidsteam.data.local.UsuariosDAO
+import com.example.androidsteam.data.repository.JogosRepository
+import com.example.androidsteam.data.repository.UsuariosRepository
 import com.example.androidsteam.ui.theme.AndroidSteamTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -59,12 +63,12 @@ class TelaCadastro : ComponentActivity() {
 @Composable
 @Preview
 fun PreviewTela5(){
-    Tela5(onClickInicio = {}, onClickLogin = {})
+    Tela5(onClickLogin = {})
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Tela5(onClickInicio: () -> Unit, onClickLogin: () -> Unit){
+fun Tela5(onClickLogin: () -> Unit){
     Scaffold {
         Surface(modifier = Modifier.padding(it)) {
             Column(
@@ -74,7 +78,7 @@ fun Tela5(onClickInicio: () -> Unit, onClickLogin: () -> Unit){
                     .padding(10.dp)
             ) {
                 Cabecalho2()
-                Formulario2(onClickInicio)
+                Formulario2()
                 InformacoesAdicionais2(onClickLogin)
             }
         }
@@ -95,34 +99,25 @@ private fun Cabecalho2() {
 
 @Composable
 private fun Formulario2(
-    onClickInicio: () -> Unit
+    viewModel: UsuariosViewModel = viewModel(
+        factory = UsuariosViewModelFactory(
+            UsuariosRepository(
+                AppDatabase.getDatabase(
+                    LocalContext.current
+                ).usuariosDAO()
+            )
+        )
+    )
 ) {
-    var usuario1 by remember {
-        mutableStateOf("")
-    }
-    var senha1 by remember {
-        mutableStateOf("")
-    }
-
-    var usuarios by remember { mutableStateOf<List<Usuarios>>(emptyList()) }
-
     val context = LocalContext.current
-    val db = AppDatabase.getDatabase(context) // 1. Obtém a instância Singleton do AppDatabase.
-    val usuariosDao = db.usuariosDAO()           // 2. Obtém a instância do FilmesDAO.
-
-
-//    LaunchedEffect(Unit) {
-//        usuarios = buscarUsuarios(usuariosDao) // Chama a função que busca todos os filmes.
-//        Log.d("Busca ok", "... ${usuarios}")
-//    }
-
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     Row(modifier = Modifier.height(30.dp)) {
         Text("NOME DE USUÁRIO STEAM", color = Color.LightGray)
     }
     Row(modifier = Modifier.height(80.dp)) {
         TextField(
-            value = usuario1,
-            onValueChange = { usuario1 = it },
+            value = uiState.nome,
+            onValueChange = { viewModel.onNameChange(it) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFF202126),
@@ -133,14 +128,13 @@ private fun Formulario2(
             )
         )
     }
-
     Row(modifier = Modifier.height(30.dp)) {
         Text("SENHA", color = Color.LightGray)
     }
     Row(modifier = Modifier.height(80.dp)) {
         TextField(
-            value = senha1,
-            onValueChange = { senha1 = it },
+            value = uiState.senha,
+            onValueChange = { viewModel.onPasswordChange(it) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFF202126),
@@ -157,8 +151,8 @@ private fun Formulario2(
     }
     Row(modifier = Modifier.height(80.dp)) {
         TextField(
-            value = senha1,
-            onValueChange = { senha1 = it },
+            value = uiState.senha,
+            onValueChange = { viewModel.onPasswordChange(it) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFF202126),
@@ -173,9 +167,7 @@ private fun Formulario2(
     Row(modifier = Modifier.height(70.dp)) {
         Button(
             onClick = {
-                CoroutineScope(Dispatchers.IO).launch {
-                    inserirUsuario(usuario1, senha1, usuariosDao)
-                }
+                viewModel.onSalvar()
                 Toast.makeText(context, "Cadastro efetuado.", Toast.LENGTH_SHORT).show()
             },
             modifier = Modifier.fillMaxWidth(),
@@ -212,13 +204,5 @@ private fun InformacoesAdicionais2(onClickLogin: () -> Unit) {
                 onClickLogin()
             },
             color = Color.White)
-    }
-}
-
-suspend fun inserirUsuario(nome: String, senha: String, usuariosDao: UsuariosDAO){
-    try{
-        usuariosDao.inserir(Usuarios(nome=nome, senha = senha)) // Chama o metodo de inserção do DAO.
-    }catch (e: Exception){
-        Log.e("Erro ao adicionar", "Msg: ${e.message}")
     }
 }

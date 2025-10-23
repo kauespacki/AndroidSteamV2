@@ -62,13 +62,12 @@ import com.example.androidsteam.data.repository.JogosRepository
 @Composable
 @Preview
 fun PreviewTela3(){
-    Tela3 {}
+    Tela3({})
 }
 
-
-
 @Composable
-fun TelaInicial(
+fun Tela3(
+    onClickPerfil: () -> Unit,
     viewModel: JogosViewModel = viewModel(
         factory = JogosViewModelFactory(
             JogosRepository(
@@ -78,24 +77,9 @@ fun TelaInicial(
             )
         )
     )
-) {
-
+)
+{
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-}
-
-
-    @Composable
-fun Tela3(onClickPerfil: () -> Unit){
-    val context = LocalContext.current
-    val db = AppDatabase.getDatabase(context) // 1. Obtém a instância Singleton do AppDatabase.
-    val jogosDao = db.jogosDAO()
-    var jogos by remember { mutableStateOf<List<Jogos>>(emptyList()) }
-
-    LaunchedEffect(Unit) {
-        jogos = buscarJogos(jogosDao) // Chama a função que busca todos os filmes.
-        Log.d("Busca ok", "... ${jogos}")
-    }
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -118,14 +102,12 @@ fun Tela3(onClickPerfil: () -> Unit){
                 }
 
 
-                item { jogos.forEach{ Bloco4(it.nome, it.preco, it.imagem) } }
+                item { uiState.listaDeJogos.forEach{ Bloco4(it.nome, it.preco, it.imagem) } }
             }
             Footer(onClickPerfil)
         }
     }
 }
-
-
 
 @Composable
 private fun Cabecalho() {
@@ -325,14 +307,13 @@ private fun Bloco4(nome:String, preco:String, imagem:String) {
                         modifier = Modifier.fillMaxSize()
                     )
                 }
-                Text("$nome", style = MaterialTheme.typography.titleLarge, color = Color.White, modifier = Modifier.padding(5.dp, 0.dp, 0.dp, 0.dp))
-                Text("$preco", style = MaterialTheme.typography.titleMedium, color = Color.White, modifier = Modifier.padding(10.dp))
+                Text(nome, style = MaterialTheme.typography.titleLarge, color = Color.White, modifier = Modifier.padding(5.dp, 0.dp, 0.dp, 0.dp))
+                Text(preco, style = MaterialTheme.typography.titleMedium, color = Color.White, modifier = Modifier.padding(10.dp))
             }
 
         }
     }
 }
-
 
 @Composable
 private fun Footer(onClickPerfil: () -> Unit) {
@@ -383,14 +364,5 @@ private fun Footer(onClickPerfil: () -> Unit) {
 
         )
 
-    }
-}
-
-suspend fun buscarJogos(jogosDao: JogosDAO): List<Jogos> {
-    return try {
-        jogosDao.buscarTodos() // Chama o método do DAO.
-    } catch (e: Exception) {
-        Log.e("Erro ao buscar", "${e.message}")
-        emptyList()
     }
 }

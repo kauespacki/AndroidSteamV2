@@ -14,7 +14,7 @@ interface JogosDAO{
     suspend fun inserir(jogo: Jogos)
 
     @Query("SELECT * FROM jogos")
-    fun buscarTodos() : List<Jogos>
+    fun buscarTodos() : Flow<List<Jogos>>
 
     @Delete
     suspend fun deletar(jogos: Jogos)

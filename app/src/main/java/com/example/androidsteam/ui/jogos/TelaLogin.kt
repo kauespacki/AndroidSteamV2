@@ -63,13 +63,8 @@ fun PreviewTela1(){
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Tela1(
-
     onClickInicio: () -> Unit, onClickCadastro: () -> Unit
 ) {
-
-
-
-
     Scaffold {
         Surface(modifier = Modifier.padding(it)) {
             Column(
@@ -111,24 +106,16 @@ private fun Formulario(
         )
     )
 ) {
-
-
-     var usuario1 by remember {
-        mutableStateOf("")
-    }
-    var senha1 by remember {
-        mutableStateOf("")
-    }
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     Row(modifier = Modifier.height(30.dp)) {
         Text("NOME DE USUÁRIO STEAM", color = Color.LightGray)
     }
     Row(modifier = Modifier.height(80.dp)) {
         TextField(
-            value = usuario1,
-            onValueChange = { usuario1 = it },
+            value = uiState.nome,
+            onValueChange = { viewModel.onNameChange(it) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFF202126),
@@ -139,16 +126,13 @@ private fun Formulario(
             )
         )
     }
-
-    val context = LocalContext.current
-
     Row(modifier = Modifier.height(30.dp)) {
         Text("SENHA", color = Color.LightGray)
     }
     Row(modifier = Modifier.height(80.dp)) {
         TextField(
-            value = senha1,
-            onValueChange = { senha1 = it },
+            value = uiState.senha,
+            onValueChange = { viewModel.onPasswordChange(it) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFF202126),
@@ -164,17 +148,15 @@ private fun Formulario(
         Button(
             onClick = {
                 viewModel.validarLogin(
-                    nome = usuario1,
-                    senha = senha1,
+                    nome = uiState.nome,
+                    senha = uiState.senha,
                     onSuccess = {
                         onClickInicio()
-
                     },
                     onError = {
                         Toast.makeText(context, "Usuário não encontrado.", Toast.LENGTH_SHORT).show()
                     }
                 )
-
             },
             modifier = Modifier.fillMaxWidth(),
             shape = RectangleShape,
@@ -213,15 +195,3 @@ private fun InformacoesAdicionais(onClickCadastro: () -> Unit) {
         )
     }
 }
-
-/*
-suspend fun buscarUsuarios(usuariosDao: UsuariosDAO): List<Usuarios> {
-    return try {
-        usuariosDao.buscarTodos() // Chama o método do DAO.
-    } catch (e: Exception) {
-        Log.e("Erro ao buscar", "${e.message}")
-        emptyList()
-    }
-}
-
- */
