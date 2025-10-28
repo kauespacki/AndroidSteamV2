@@ -85,7 +85,7 @@ fun TelaAdminPanel(
         Spacer(modifier = Modifier.height(12.dp))
 
         // Lista de Usuários
-        LazyColumn {
+        LazyColumn(modifier = Modifier.heightIn(max = 200.dp)) { // Altura máxima para a lista
             items(uiStateUsuarios.listaDeUsuarios) { usuario ->
                 AdminCard(
                     title = usuario.nome,
@@ -115,7 +115,7 @@ fun TelaAdminPanel(
             onClick = {
                 jogoParaEditar = null
                 showJogoDialog = true
-                Log.d("TelaAdminPanel", "Botão Adicionar Jogo pressionado") // Adicionado para depuração
+                Log.d("TelaAdminPanel", "Botão Adicionar Jogo pressionado")
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF216cad))
@@ -129,7 +129,7 @@ fun TelaAdminPanel(
         if (uiStateJogos.listaDeJogos.isEmpty()) {
             Text("Nenhum jogo encontrado", color = Color.Gray)
         } else {
-            LazyColumn {
+            LazyColumn(modifier = Modifier.weight(1f)) { // Ocupa o espaço restante
                 items(uiStateJogos.listaDeJogos) { jogo ->
                     AdminCard(
                         title = jogo.nome,
@@ -156,14 +156,22 @@ fun TelaAdminPanel(
             jogo = jogoParaEditar,
             onDismiss = { showJogoDialog = false },
             onSave = { jogo ->
-                if (jogoParaEditar == null) {
-                    viewModelJogos.onSalvar()
-                    Toast.makeText(context, "Jogo adicionado!", Toast.LENGTH_SHORT).show()
-                } else {
-                    // Atualização do jogo
-                    viewModelJogos.onSalvar()
-                    Toast.makeText(context, "Jogo atualizado!", Toast.LENGTH_SHORT).show()
+                // **INÍCIO DA CORREÇÃO**
+                // 1. Se estiver editando, informa ao ViewModel qual é o jogo original.
+                if (jogoParaEditar != null) {
+                    viewModelJogos.onEditar(jogoParaEditar!!)
                 }
+
+                // 2. Atualiza o estado do ViewModel com os novos dados do dialog.
+                viewModelJogos.onNameChange(jogo.nome)
+                viewModelJogos.onPrecoChange(jogo.preco)
+                viewModelJogos.onImagemChange(jogo.imagem)
+
+                // 3. Agora o onSalvar() usará os dados corretos (novos ou atualizados).
+                viewModelJogos.onSalvar()
+                // **FIM DA CORREÇÃO**
+
+                Toast.makeText(context, if (jogoParaEditar == null) "Jogo adicionado!" else "Jogo atualizado!", Toast.LENGTH_SHORT).show()
                 showJogoDialog = false
             }
         )
@@ -175,7 +183,20 @@ fun TelaAdminPanel(
             usuario = usuarioParaEditar,
             onDismiss = { showUsuarioDialog = false },
             onSave = { usuario ->
+                // **INÍCIO DA CORREÇÃO**
+                // 1. Se estiver editando, informa ao ViewModel qual é o usuário original.
+                if (usuarioParaEditar != null) {
+                    viewModelUsuarios.onEditar(usuarioParaEditar!!)
+                }
+
+                // 2. Atualiza o estado do ViewModel com os novos dados do dialog.
+                viewModelUsuarios.onNameChange(usuario.nome)
+                viewModelUsuarios.onPasswordChange(usuario.senha)
+
+                // 3. Agora o onSalvar() usará os dados corretos.
                 viewModelUsuarios.onSalvar()
+                // **FIM DA CORREÇÃO**
+
                 Toast.makeText(context, if (usuarioParaEditar == null) "Usuário adicionado!" else "Usuário atualizado!", Toast.LENGTH_SHORT).show()
                 showUsuarioDialog = false
             }
@@ -213,6 +234,7 @@ fun AdminCard(
 
 @Composable
 fun JogoDialog(jogo: Jogos?, onDismiss: () -> Unit, onSave: (Jogos) -> Unit) {
+    // Este estado local é OK, pois ele só passa o objeto para cima no onSave.
     var nome by remember { mutableStateOf(jogo?.nome ?: "") }
     var preco by remember { mutableStateOf(jogo?.preco ?: "") }
     var imagem by remember { mutableStateOf(jogo?.imagem ?: "") }
@@ -222,6 +244,7 @@ fun JogoDialog(jogo: Jogos?, onDismiss: () -> Unit, onSave: (Jogos) -> Unit) {
         confirmButton = {
             Button(onClick = {
                 if (nome.isNotBlank() && preco.isNotBlank() && imagem.isNotBlank()) {
+                    // Passa o objeto Jogo (novo ou modificado) para a função onSave
                     onSave(Jogos(id = jogo?.id ?: 0, nome = nome, preco = preco, imagem = imagem))
                 }
             }) {
@@ -275,6 +298,7 @@ fun UsuarioDialog(usuario: Usuarios?, onDismiss: () -> Unit, onSave: (Usuarios) 
         confirmButton = {
             Button(onClick = {
                 if (nome.isNotBlank() && senha.isNotBlank()) {
+                    // Passa o objeto Usuarios (novo ou modificado) para a função onSave
                     onSave(Usuarios(id = usuario?.id ?: 0, nome = nome, senha = senha))
                 }
             }) {
@@ -315,5 +339,8 @@ fun fieldColors() = TextFieldDefaults.colors(
     focusedContainerColor = Color(0xFF202126),
     unfocusedContainerColor = Color(0xFF202126),
     focusedTextColor = Color.White,
-    unfocusedTextColor = Color.White
+    unfocusedTextColor = Color.White,
+    focusedIndicatorColor = Color.Transparent,
+    unfocusedIndicatorColor = Color.Transparent,
+    disabledIndicatorColor = Color.Transparent
 )
